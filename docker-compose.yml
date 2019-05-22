@@ -1,5 +1,9 @@
+# docker-composerリファレンス和訳 
+# https://qiita.com/zembutsu/items/9e9d80e05e36e882caaa
 version: '2'
+
 services:
+
   rails: &app_base
     build:
       context: .
@@ -7,8 +11,11 @@ services:
     command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
     env_file:
       - "./.env.dev"
+    environment:
+      - "WEBPACKER_DEV_SERVER_HOST=webpack"
     volumes:
       - ".:/app"
+    # 他のサービスやコンテナから全てマウントする
     volumes_from:
       - data
     ports:
@@ -17,32 +24,43 @@ services:
       - db
     tty: true
     stdin_open: true
+
   webpack:
     <<: *app_base
+    # このコマンドでvueのファイルを自動コンパイル(変更されたタイミングで)できる。
     command: "bin/webpack-dev-server"
+    environment:
+      - "WEBPACKER_DEV_SERVER_HOST=0.0.0.0"
     ports:
       - "3035:3035"
     depends_on:
       - rails
     tty: false
     stdin_open: false
+
   db:
-    image: "postgres:10.3"
+    # 実行時に再起動するかどうか(今回はdockerをビルド時や立ち上げる際にMYSQLを再起動、という意味)
+    restart: always
+    image: mysql:5.7
     environment:
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=password"
+      - "MYSQL_ROOT_PASSWORD=password"
     volumes_from:
       - data
     ports:
-      - "5432:5432"
+      - "4306:3306"
+
+  # dataコンテナを用いてmysql, gem, node_moduleなどをコンテナ内にキャッシュしておくことでbuild時の再インストールを防ぐ。
   data:
     image: "busybox"
     volumes:
-      - "db:/var/lib/postgresql/data"
-      - "bundle:/usr/local/bundle"
+      - db:/var/lib/mysql
+      - bundle:/usr/local/bundle
+      - node_modules:/myapp/node_modules
 
 volumes:
   db:
     driver: local
   bundle:
+    driver: local
+  node_modules:
     driver: local
