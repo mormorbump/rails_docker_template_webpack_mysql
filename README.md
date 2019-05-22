@@ -101,3 +101,23 @@ docker-compose run --rm rails bin/rails credentials:edit
 ## License
 
 MIT
+
+
+### めも
+####立ち上げるとき
+docker-compose up
+(-dをつけるとデーモン化)
+####コマンド
+【マイグレーション関連を実行したい時】
+$ docker-compose run --rm app bundle exec rake db:migrate
+$ docker-compose run --rm app bundle exec rake db:migrate:reset
+
+【seedの実行】
+$ docker-compose run --rm app bundle exec rake db:seed
+
+【コンテナ内に入って操作をしたいとき】
+$ docker-compose run --rm app /bin/bash
+
+【rails consoleを使いたい時】
+$ docker-compose run --rm app bundle exec rails c
+=> -rmをつけると、立ち上げたコンテナを終わった後削除してくれる。
