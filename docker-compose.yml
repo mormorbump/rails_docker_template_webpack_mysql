@@ -16,6 +16,7 @@ services:
     # 他のサービスやコンテナから全てマウントする
     volumes_from:
       - data
+    # ホスト(自分のPC)で4000にアクセスすると、向こうの3000に行く。なのでlocalhost:4000でアクセス。
     ports:
       - "4000:3000"
     depends_on:
