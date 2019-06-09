@@ -15,6 +15,11 @@ services:
       - "WEBPACKER_DEV_SERVER_HOST=webpack"
     volumes:
       - ".:/app"
+      # マウントを上書き
+      - /app/tmp
+      - /app/log
+      - /app/.git
+      - /app/vendor      
     # 他のサービスやコンテナから全てマウントする
     volumes_from:
       - data
