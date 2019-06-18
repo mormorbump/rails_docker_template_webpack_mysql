@@ -44,6 +44,7 @@ services:
     command: "bin/webpack-dev-server"
     environment:
       - "WEBPACKER_DEV_SERVER_HOST=0.0.0.0"
+    # WEBPACKER_DEV_SERVER_PORTと等しくする。
     ports:
       - "4035:3035"
     depends_on:
