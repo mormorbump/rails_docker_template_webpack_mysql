@@ -11,8 +11,13 @@ services:
     command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
     env_file:
       - "./.env.dev"
+   # webpackerのドキュメントに書いてある環境変数でport forwardingする前のポートをrailsコンテナに指定しなければならない。
+    # 下にあるwebpackerコンテナでは WEBPACKER_DEV_SERVER_PORT:3035 にする。
+    # https://github.com/rails/webpacker/blob/227661b546701e107213aa9b6f83451bc89cf7d5/docs/cloud9.md
+    # https://blog.piyo.tech/posts/2018-10-14-change-webpacker-dev-server-port/
     environment:
       - "WEBPACKER_DEV_SERVER_HOST=webpack"
+      - "WEBPACKER_DEV_SERVER_PORT=4035"
     volumes:
       - ".:/app"
       # マウントを上書き
@@ -30,14 +35,18 @@ services:
     tty: true
     stdin_open: true
 
+  # config/webpack/environment.jsに下のurlの記述をしないとまじで詰む。
+  # https://qiita.com/mattan/items/7cac136e3d8c9a5536d3#_reference-324cbd5b2805407a7cc0
+  # portには、railsコンテナで指定したWEBPACKER_DEV_SERVER_PORT: 3035とするのに注意。
   webpack:
     <<: *app_base
     # このコマンドでvueのファイルを自動コンパイル(変更されたタイミングで)できる。
     command: "bin/webpack-dev-server"
     environment:
       - "WEBPACKER_DEV_SERVER_HOST=0.0.0.0"
+    # WEBPACKER_DEV_SERVER_PORTと等しくする。
     ports:
-      - "3035:3035"
+      - "4035:3035"
     depends_on:
       - rails
     tty: false
