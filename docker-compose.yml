@@ -45,7 +45,7 @@ services:
     environment:
       - "WEBPACKER_DEV_SERVER_HOST=0.0.0.0"
     ports:
-      - "3035:3035"
+      - "4035:3035"
     depends_on:
       - db
     tty: false
