@@ -1,3 +1,32 @@
+# README
+
+This README would normally document whatever steps are necessary to get the
+application up and running.
+
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
+
+
+
+
+
 # 参考
 ## rails docker webpacerについて
 https://qiita.com/hogehoge1234/items/30fa0b3bc9b643400414
@@ -72,3 +101,23 @@ docker-compose run --rm rails bin/rails credentials:edit
 ## License
 
 MIT
+
+
+### めも
+####立ち上げるとき
+docker-compose up
+(-dをつけるとデーモン化)
+####コマンド
+【マイグレーション関連を実行したい時】
+$ docker-compose run --rm app bundle exec rake db:migrate
+$ docker-compose run --rm app bundle exec rake db:migrate:reset
+
+【seedの実行】
+$ docker-compose run --rm app bundle exec rake db:seed
+
+【コンテナ内に入って操作をしたいとき】
+$ docker-compose run --rm app /bin/bash
+
+【rails consoleを使いたい時】
+$ docker-compose run --rm app bundle exec rails c
+=> -rmをつけると、立ち上げたコンテナを終わった後削除してくれる。
